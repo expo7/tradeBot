@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+{% extends 'stocks/base.html' %}
+{% load markdownify %}
+{%load static %}
+
+{% block title %}Backtest Results{% endblock %}
+
+{% block content %}
+<html>
+<head>
+    <title>Backtest Results</title>
+</head>
+<body>
+    <h1>Backtest Results</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Bot</th>
+                <th>Stock</th>
+                <th>Alpha</th>
+                <th>Beta</th>
+                <th>Sharpe Ratio</th>
+                <th>Sortino Ratio</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for result in results %}
+            <tr>
+                <td>{{ result.name }}</td>
+                <td><a href="{% url 'trade_detail' result.id %}">{{result.stock}}</a></td>
+                <td>{{ result.alpha }}</td>
+                <td>{{ result.beta }}</td>
+                <td>{{ result.sharpe_ratio }}</td>
+                <td>{{ result.sortino_ratio }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        const alertSocket = new WebSocket(
+            'ws://' + window.location.host + '/ws/alerts/'
+        );
+    
+        alertSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            alert(data.message);
+        };
+    
+        alertSocket.onclose = function(e) {
+            console.error('Alert socket closed unexpectedly');
+        };
+    </script>
+</body>
+</html>
+{% endblock %}  

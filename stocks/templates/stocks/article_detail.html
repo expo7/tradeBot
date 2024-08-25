@@ -1,0 +1,72 @@
+{% extends 'stocks/base.html' %}
+{% load markdownify %}
+{%load static %}
+{% block title %}{{ article.title }}{% endblock %}
+{% block content %}
+<div class="container mt-5 p-3 border rounded">
+    <div class="row">
+        <div class="col-lg-10 offset-lg-1">
+
+            <h1 class="mb-4 text-center">{{ article.title }}</h1>
+
+            <p class="text-muted">
+                By <strong>{{ article.author }}</strong> | Published on {{ article.published_date|date:"F d, Y" }}
+            </p>
+
+            <div class="content mb-4">
+                <!-- Render the article content with Markdown support -->
+                {{ article.content|markdownify }}
+            </div>
+
+            <!-- If you have tags, display them -->
+            {% if article.tags.exists %}
+            <p class="mt-4">
+                <strong>Tags:</strong>
+                {% for tag in article.tags.all %}
+                    <span class="badge bg-secondary">{{ tag.name }}</span>
+                {% endfor %}
+            </p>
+            {% endif %}
+
+            <!-- Optional: Link to go back to the article list -->
+            <a href="{% url 'article_list' %}" class="btn btn-primary mt-4">Back to Articles</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% comment %} {% extends 'stocks/base.html' %}
+{% load markdownify %}
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">{{ article.title }}</h1>
+
+    <p class="text-muted">
+        By {{ article.author }} | Published on {{ article.published_date|date:"F d, Y" }}
+    </p>
+
+    <div class="content">
+        <!-- Render the article content with Markdown support -->
+        {{ article.content|markdownify }}
+    </div>
+
+    <!-- If you have tags, display them -->
+    {% if article.tags.exists %}
+    <p class="mt-4">
+        <strong>Tags:</strong>
+        {% for tag in article.tags.all %}
+            <span class="badge bg-secondary">{{ tag.name }}</span>
+        {% endfor %}
+    </p>
+    {% endif %}
+
+    <!-- Optional: Link to go back to the article list -->
+    <a href="{% url 'article_list' %}" class="btn btn-primary mt-4">Back to Articles</a>
+</div>
+{% endblock %} {% endcomment %}
+
+
+

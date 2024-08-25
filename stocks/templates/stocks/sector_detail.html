@@ -1,0 +1,62 @@
+{% extends 'stocks/base.html' %}
+{% load markdownify %}
+{% load static %}
+
+{% block title %}{{ sector.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="jumbotron jumbotron-fluid" style="background-image: url('{% static 'images/jumbotron.png' %}'); background-size: cover; background-position: center;padding: 5rem 2rem;">
+        <h1 class="display-4">{{ sector.name }}</h1>
+        <!-- Add more details about the sector as needed -->
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="container mt-5 p-3 border rounded">
+                <div class="row">
+                    {% comment %} <div class="col-lg-8 offset-lg-2"> {% endcomment %}
+                    <div class="col-lg-10 offset-lg-1">
+
+                        {% comment %} <div class="text-center mb-4">
+                            <img src="{% static 'images/logo.png' %}" alt="Logo" class="img-fluid" style="max-width: 200px;">
+                        </div> {% endcomment %}
+                        <h1 class="mb-4 text-center">{{ article.title }}</h1>
+            
+            
+                        <div class="content mb-4">
+                            <!-- Render the article content with Markdown support -->
+                            {{ article.content|markdownify }}
+                        </div>
+            
+                        <!-- If you have tags, display them -->
+                        {% if article.tags.exists %}
+                        <p class="mt-4">
+                            <strong>Tags:</strong>
+                            {% for tag in article.tags.all %}
+                                <span class="badge bg-secondary">{{ tag.name }}</span>
+                            {% endfor %}
+                        </p>
+                        {% endif %}
+            
+                        <!-- Optional: Link to go back to the article list -->
+                        {% comment %} <a href="{% url 'article_list' %}" class="btn btn-primary mt-4">Back to Articles</a> {% endcomment %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="related-articles container mt-5 p-3 border rounded">
+                <h3 class="mb-4 text-center">Related Articles</h3>
+                <ul class="list-group">
+                    {% for article in related_articles %}
+                        <li class="list-group-item">
+                            <a href="{% url 'article_detail' article.slug %}">{{ article.title }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

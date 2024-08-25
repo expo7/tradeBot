@@ -1,0 +1,138 @@
+{% extends 'stocks/base.html' %}
+{% load markdownify %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<div class="jumbotron jumbotron-fluid" style="background-image: url('{% static 'images/jumbotron.png' %}'); background-size: cover; background-position: center;">
+    <div class="container text-white">
+        <h1 class="display-4">Welcome to Our Community</h1>
+        <p class="lead">Empowering you with the insights and tools to navigate the world of finance. Explore our resources, stay informed with the latest trends, and take control of your financial future. Whether you're just starting or a seasoned investor, there's something here for everyone. Dive in and unlock the potential of your investments.</p>
+    </div>
+</div>
+
+<div class="container mt-1 p-3 border rounded">
+    <div class="row">
+        {% comment %} <div class="col-lg-8 offset-lg-2"> {% endcomment %}
+        <div class="col-lg-10 offset-lg-1">
+            <h1 class="mb-4 text-center">{{ article.title }}</h1>
+
+            {% comment %} <p class="text-muted">
+                By <strong>{{ article.author }}</strong> | Published on {{ article.published_date|date:"F d, Y" }}
+            </p> {% endcomment %}
+
+            <div class="content mb-4">
+                <!-- Render the article content with Markdown support -->
+                {{ article.content|markdownify }}
+            </div>
+
+            <!-- If you have tags, display them -->
+            {% if article.tags.exists %}
+            <p class="mt-4">
+                <strong>Tags:</strong>
+                {% for tag in article.tags.all %}
+                    <span class="badge bg-secondary">{{ tag.name }}</span>
+                {% endfor %}
+            </p>
+            {% endif %}
+
+            <!-- Optional: Link to go back to the article list -->
+            {% comment %} <a href="{% url 'article_list' %}" class="btn btn-primary mt-4">Back to Articles</a> {% endcomment %}
+        </div>
+    </div>
+    <script>
+        const alertSocket = new WebSocket(
+            'ws://' + window.location.host + '/ws/alerts/'
+        );
+    
+        alertSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            alert(data.message);  // or update the DOM with the alert
+        };
+    
+        alertSocket.onclose = function(e) {
+            console.error('Alert socket closed unexpectedly');
+        };
+    </script>
+    
+</div>
+
+{% endblock %}
+{% comment %} <body>
+    <header>
+        <h1>Understanding Fundamental Analysis: A Guide for Investors</h1>
+    </header>
+    <main>
+        <section>
+            <h2>What is Fundamental Analysis?</h2>
+            <p>
+                Fundamental analysis is the process of assessing a company’s financial health and performance to estimate its stock's intrinsic value. By understanding the underlying factors that drive a company's performance, investors can make educated decisions about buying, holding, or selling stocks.
+            </p>
+        </section>
+
+        <section>
+            <h2>Key Components of Fundamental Analysis</h2>
+            <ul>
+                <li>
+                    <h3>Financial Statements</h3>
+                    <ul>
+                        <li><strong>Income Statement:</strong> Provides insights into a company’s revenue, expenses, and profits over a specific period. Key metrics include Earnings Per Share (EPS) and Profit Margins.</li>
+                        <li><strong>Balance Sheet:</strong> Shows a company's assets, liabilities, and shareholders' equity. Important metrics include the Debt-to-Equity Ratio and Return on Assets (ROA).</li>
+                        <li><strong>Cash Flow Statement:</strong> Details cash inflows and outflows from operations, investing, and financing activities. Free Cash Flow is a critical metric here.</li>
+                    </ul>
+                </li>
+                <li>
+                    <h3>Valuation Metrics</h3>
+                    <ul>
+                        <li><strong>Price-to-Earnings (P/E) Ratio:</strong> Measures the stock price relative to its earnings per share. A high P/E ratio might indicate growth expectations, while a low P/E might suggest undervaluation.</li>
+                        <li><strong>Price-to-Book (P/B) Ratio:</strong> Compares the stock price to the book value per share. A high P/B ratio may indicate overvaluation, while a low P/B might suggest undervaluation.</li>
+                    </ul>
+                </li>
+                <li>
+                    <h3>Profitability Metrics</h3>
+                    <ul>
+                        <li><strong>Earnings Per Share (EPS):</strong> Indicates the portion of a company’s profit allocated to each outstanding share of common stock.</li>
+                        <li><strong>Return on Equity (ROE):</strong> Measures how effectively a company uses shareholders' equity to generate profits.</li>
+                    </ul>
+                </li>
+                <li>
+                    <h3>Growth Metrics</h3>
+                    <ul>
+                        <li><strong>Revenue Growth:</strong> Tracks the increase in a company’s sales over time. Strong revenue growth often signals a healthy, expanding business.</li>
+                        <li><strong>Earnings Growth:</strong> Reflects the growth in a company's net income over a period. Consistent earnings growth can indicate a strong and sustainable business model.</li>
+                    </ul>
+                </li>
+                <li>
+                    <h3>Financial Stability</h3>
+                    <ul>
+                        <li><strong>Debt-to-Equity Ratio:</strong> Assesses a company’s financial leverage by comparing its total liabilities to its shareholders' equity. A lower ratio suggests less risk, while a higher ratio indicates higher leverage.</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Why is Fundamental Analysis Important?</h2>
+            <p>
+                Fundamental analysis helps investors understand a company's financial health, competitive position, and future growth potential. By focusing on these factors, investors can make better decisions about the value of a stock relative to its market price. This approach is essential for long-term investing and helps mitigate the risks associated with market speculation.
+            </p>
+        </section>
+
+        <section>
+            <h2>How to Get Started</h2>
+            <p>
+                To begin your journey with fundamental analysis, start by:
+                <ol>
+                    <li>Reviewing a company’s financial statements and key metrics.</li>
+                    <li>Comparing these metrics with industry peers and historical data.</li>
+                    <li>Keeping an eye on industry trends and economic conditions that might impact the company's performance.</li>
+                </ol>
+                By integrating fundamental analysis into your investment strategy, you’ll gain valuable insights that can guide you toward making sound investment choices and achieving your financial goals.
+            </p>
+        </section>
+    </main>
+
+</body> {% endcomment %}
+{% comment %} </html> {% endcomment %}

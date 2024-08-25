@@ -1,0 +1,64 @@
+{% extends 'stocks/base.html' %}
+{% load markdownify %}
+{% block title %}Articles{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Articles</h1>
+    
+    <div class="row">
+        {% for article in articles %}
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{% url 'article_detail' slug=article.slug %}">{{ article.title }}</a>
+                        </h5>
+
+                        <!-- Render HTML content safely, truncate, and preserve line breaks -->
+                        <p class="card-text">
+                            {{ article.content|markdownify|truncatewords:30|safe }}
+                        </p>
+
+                        <p class="text-muted mb-0">
+                            <small>
+                                By {{ article.author }} | Published on {{ article.published_date|date:"F d, Y" }}
+                            </small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination, if implemented -->
+    <div class="d-flex justify-content-center">
+        {% if is_paginated %}
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% for i in paginator.page_range %}
+                        <li class="page-item {% if page_obj.number == i %}active{% endif %}">
+                            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                        </li>
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

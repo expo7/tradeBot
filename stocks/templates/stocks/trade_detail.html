@@ -1,0 +1,43 @@
+{% extends 'stocks/base.html' %}
+{% load markdownify %}
+{% load static %}
+
+{% block title %}Trade Detail{% endblock %}
+
+{% block content %}
+<html>
+<head>
+    <title>Trade Detail</title>
+</head>
+<body>
+    <h1>Trade Detail for {{ trade.stock }}</h1>
+    <table>
+        <tr>
+            <th>Stock</th>
+            <td>{{ trade.stock }}</td>
+        </tr>
+        <tr>
+            <th>Alpha</th>
+            <td>{{ trade.alpha }}</td>
+        </tr>
+        <tr>
+            <th>Beta</th>
+            <td>{{ trade.beta }}</td>
+        </tr>
+        <tr>
+            <th>Sharpe Ratio</th>
+            <td>{{ trade.sharpe_ratio }}</td>
+        </tr>
+        <tr>
+            <th>Sortino Ratio</th>
+            <td>{{ trade.sortino_ratio }}</td>
+        </tr>
+    </table>
+
+    {% if trade.backtest_plot %}
+    <h2>Backtest Plot</h2>
+    <img src="{{ trade.backtest_plot.url }}" alt="Backtest Plot for {{ trade.stock }}">
+    {% endif %}
+</body>
+</html>
+{% endblock %} 

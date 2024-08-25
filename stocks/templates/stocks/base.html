@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Educational Stock Analysis{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Your page description{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}keyword1, keyword2, keyword3{% endblock %}">
+    {% load static %}
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-light">
+    <header class="bg-secondary p-3 text-blue">
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container-fluid">
+                <img src="{% static 'images/logo.png' %}" alt="Logo" class="img-fluid" style="max-width: 200px;">
+                <a class="navbar-brand" href="{% url 'home' %}">Educational Stock Analysis</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link nav-link-blue" href="{% url 'home' %}">Home</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle nav-link-blue" href="#" id="sectorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Sector Analysis
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="sectorDropdown">
+                                {% for sector in sectors %}
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" href="{% url 'sector_detail' sector.slug %}">{{ sector.name }}</a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        <li class="nav-item"><a class="nav-link nav-link-blue" href="{% url 'article_list' %}">Articles</a></li>
+                        <li class="nav-item"><a class="nav-link nav-link-blue" href="{% url 'trade_list' %}">Backtesting</a></li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        {% if user.is_authenticated %}
+                            {% if user.is_superuser %}
+                                <li class="nav-item"><a class="nav-link nav-link-blue" href="{% url 'admin:index' %}">Admin</a></li>
+                        {% endif %}
+                            <li class="nav-item"><a class="nav-link nav-link-blue" href="{% url 'logout' %}">Logout</a></li>
+                            {% comment %} <li class="nav-item"><a class="nav-link nav-link-blue" href="{% url 'user_profile' %}">{{ user.username|capfirst }}</a></li> {% endcomment %}
+                            <li class="nav-item"><a class="nav-link nav-link-blue" href="#">{{ user.username|capfirst }}</a></li>
+                        {% else %}
+                            <li class="nav-item"><a class="nav-link nav-link-blue" href="{% url 'login' %}">Login</a></li>
+                            <li class="nav-item"><a class="nav-link nav-link-blue" href="{% url 'register' %}">Register</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container my-5 p-4 bg-white rounded shadow-sm">
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show custom-alert" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="footer mt-auto py-3 bg-dark text-white">
+        <div class="container text-center">
+            <p>&copy; 2024 Educational Stock Analysis. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/scripts.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+
+{% comment %} <!-- stocks/templates/stocks/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Educational Stock Analysis{% endblock %}</title>
+    {% load static %}
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <img src="{% static 'images/logo.png' %}" alt="Logo" class="img-fluid" style="max-width: 200px;">
+                <a class="navbar-brand" href="{% url 'home' %}">Educational Stock Analysis</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="sectorDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Sector Analysis
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="sectorDropdown">
+                                {% for sector in sectors %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'sector_detail' sector.slug %}">{{ sector.name }}</a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'article_list' %}">Articles</a></li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        {% if user.is_authenticated %}
+                            {% if user.is_superuser %}
+                                <li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">Admin</a></li>
+                        {% endif %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'user_profile' %}">{{ user.username|capfirst }}</a></li>
+                        {% else %}
+                            <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container my-5">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="footer mt-auto py-3 bg-dark">
+        <div class="container text-center">
+            <p>&copy; 2024 Educational Stock Analysis. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'js/scripts.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html> {% endcomment %}
